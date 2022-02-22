@@ -3,6 +3,8 @@ package com.example.javaassignment.shoppingapi.user;
 public class AuthResponse {
     private String jwtToken;
 
+    public AuthResponse() {}
+
     public AuthResponse(String jwtToken) {
         this.jwtToken = jwtToken;
     }
