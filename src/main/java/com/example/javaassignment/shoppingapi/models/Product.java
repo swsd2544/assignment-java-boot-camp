@@ -76,4 +76,15 @@ public class Product {
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(obj.getClass() == getClass() && ((Product) obj).getId() == getId()) {
+            return true;
+        }
+        return false;
+    }
 }

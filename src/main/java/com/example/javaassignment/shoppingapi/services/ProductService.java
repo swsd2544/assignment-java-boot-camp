@@ -37,7 +37,7 @@ public class ProductService {
                 return result.get();
             }
         } catch (NumberFormatException e) {
-            throw new Exception("ID is not in number format");
+            throw new NumberFormatException("ID is not in number format");
         }
         return null;
     }

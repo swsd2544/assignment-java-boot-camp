@@ -22,7 +22,24 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping()
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getProducts(@RequestParam(required = false, name = "query") String query) {
+        List<Product> productList = productService.getAllProducts(query);
+        List<ProductInfoResponse> response = productList.stream()
+                .map(product -> new ProductInfoResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getMerchant().getName(),
+                        product.getPrice(),
+                        product.getAmount()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(response.toArray(new ProductInfoResponse[response.size()]));
+    }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> getProduct(@PathVariable String id) {
         try {
             Product product = productService.getProductById(id);
@@ -62,18 +79,5 @@ public class ProductController {
         return ResponseEntity.badRequest().body(new MessageResponse("Please enter a valid merchant id"));
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getProducts(@RequestParam(required = false, name = "query") String query) {
-        List<Product> productList = productService.getAllProducts(query);
-        List<ProductInfoResponse> response = productList.stream()
-                .map(product -> new ProductInfoResponse(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getMerchant().getName(),
-                product.getPrice(),
-                product.getAmount()))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(response.toArray(new ProductInfoResponse[response.size()]));
-    }
+
 }
